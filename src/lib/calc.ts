@@ -1,23 +1,18 @@
 import type { BuildingName, ItemName, Recipe, VehicleName } from '$lib/data/types';
 import { getBuilding, getVehicle } from './helper';
-export function calc(recipes: Recipe[]) {
+export function calc(
+	recipes: Recipe[],
+	initialInOuts: Array<{ item: ItemName; in: number; out: number; active: boolean }>
+) {
 	let callstack = 0;
 	let loops = 0;
-	const outputs: Array<{ item: ItemName; num: number }> = [
-		{ item: 'Lab Equipment IV', num: 48 },
-		{ item: 'Space Research', num: 48 },
-		{ item: 'Construction Parts IV', num: 12 },
-		{ item: 'Station Parts (Launched)', num: 0.75 },
-		{ item: 'Crew Supplies (Launched)', num: 0.8 },
-		{ item: 'Astronaut', num: 4 / 720 }
-	];
-	const inputs: Array<{ item: ItemName; num: number }> = [{ item: 'Crude Oil', num: 180 }];
+
 	const baseBuildings: Array<{ building: BuildingName; num: number }> = [
 		{ building: 'Food Market II', num: 11 },
 		{ building: 'Waste Sorting Plant', num: 2 }
 	];
 	const baseVehicles: Array<{ vehicle: VehicleName; num: number }> = [
-		{ vehicle: 'Truck', num: 78 }
+		{ vehicle: 'Truck', num: 50 }
 	];
 	const inOut: Record<string, { input: number; output: number }> = {};
 	const reqBuildings: Record<string, { recipe: string; building: string; num: number }> = {};
@@ -51,15 +46,13 @@ export function calc(recipes: Recipe[]) {
 		{ item: 'Medical Supplies II', demand: 5 },
 		{ item: 'Medical Supplies III', demand: 5 }
 	];
-	for (const output of outputs) {
-		initItem(output.item);
-		let item = inOut[output.item];
-		if (item !== undefined) item.output += output.num;
-	}
-	for (const input of inputs) {
-		initItem(input.item);
-		let item = inOut[input.item];
-		if (item !== undefined) item.input += input.num;
+	for (const item of initialInOuts) {
+		initItem(item.item);
+		let itemObj = inOut[item.item];
+		if (item.active) {
+			itemObj.output += item.out;
+			itemObj.input += item.in;
+		}
 	}
 	for (const building of baseBuildings) {
 		initBuilding(building.building, 'Nothing');

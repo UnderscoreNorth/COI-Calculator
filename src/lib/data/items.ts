@@ -34,11 +34,13 @@ export const items = [
 	{ name: 'Steam (Low) (Turbine)', icon: '72px-SteamLp.png' },
 	{ name: 'Microchips', icon: '72px-Microchips.png' },
 	{ name: 'Gold', icon: '72px-Gold.png' },
-	{ name: 'Microchip 4b', icon: '72px-MicrochipWafer4B.png' },
+	{ name: 'Acid', icon: '72px-Acid.png' },
 	{ name: 'Copper', icon: '72px-Copper.png' },
+	/*{ name: 'Microchip 4b', icon: '72px-MicrochipWafer4B.png' },
+
 	{ name: 'Microchip 4a', icon: '72px-MicrochipWafer4A.png' },
 	{ name: 'Microchip 3c', icon: '72px-MicrochipWafer3C.png' },
-	{ name: 'Acid', icon: '72px-Acid.png' },
+
 	{ name: 'Microchip 3b', icon: '72px-MicrochipWafer3B.png' },
 	{ name: 'Microchip 3a', icon: '72px-MicrochipWafer3A.png' },
 	{ name: 'Microchip 2c', icon: '72px-MicrochipWafer2C.png' },
@@ -46,7 +48,7 @@ export const items = [
 	{ name: 'Microchip 2a', icon: '72px-MicrochipWafer2A.png' },
 	{ name: 'Microchip 1c', icon: '72px-MicrochipWafer1C.png' },
 	{ name: 'Microchip 1b', icon: '72px-MicrochipWafer1B.png' },
-	{ name: 'Microchip 1a', icon: '72px-MicrochipWafer1A.png' },
+	{ name: 'Microchip 1a', icon: '72px-MicrochipWafer1A.png' },*/
 	{ name: 'Silicon Wafer', icon: '72px-MonoWafer.png' },
 	{ name: 'Silicon', icon: '72px-Silicon.png' },
 	{ name: 'Hydrogen', icon: '72px-Hydrogen.png' },

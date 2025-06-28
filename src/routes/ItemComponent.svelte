@@ -18,7 +18,7 @@
     <tbody>
 {#each itemList.filter(i=>i.key == key) as item}
     <tr style:background={getRowColor(item.input,item.output)}>
-        <td><img alt={item.item} src={'/icons/' + items.filter(i=>i.name==item.item)[0].icon} /></td>
+        <td><img alt={item.item} src={'icons/' + items.filter(i=>i.name==item.item)[0].icon} /></td>
         <td>{item.item}</td>
         <td>{Math.round(item.input*100)/100}</td>
         <td>{Math.round(item.output*100)/100}</td></tr>
@@ -28,14 +28,6 @@
 <style>
      td,th{
         font-family:'Helvetica';
-        color:white;
         padding:0 0.5rem;
-    }
-    img{
-        height:32px
-    }
-    table{
-        display:inline-block;
-        vertical-align: top;
     }
 </style>
