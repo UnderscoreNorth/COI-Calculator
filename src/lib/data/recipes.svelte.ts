@@ -1266,4 +1266,7 @@ active:true
 		active: true
 	}
 ];
+for (const recipe of initRecipes) {
+	recipe.num = 0;
+}
 export const recipes = $state(initRecipes);

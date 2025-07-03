@@ -175,7 +175,6 @@ export const items = [
 	{ name: 'Broken Glass', icon: '72px-BrokenGlass.png' },
 	{ name: 'Composite Core Basic', icon: '72px-CompositeCore1.png' },
 	{ name: 'Solar Cell', icon: '72px-Solar_Cell.png' },
-	{ name: 'Chemical Fuel', icon: '72px-ChemicalFuel.png' },
 	{ name: 'Station Parts Basic', icon: '72px-SpaceStationParts1.png' },
 	{ name: 'Station Parts Basic (Launched)', icon: '72px-SpaceStationParts1.png' },
 	{ name: 'Space Maintenance', icon: '72px-SpaceStationParts1.png' },
@@ -204,5 +203,6 @@ export const items = [
 	{ name: 'Diamond Paste', icon: '72px-DiamondPaste.png' },
 	{ name: 'Reprocessed Uranium', icon: '72px-ReprocessedUranium.png' },
 	{ name: 'Plutonium', icon: '72px-Plutonium.png' },
-	{ name: 'Fission Product', icon: '72px-FissionProduct.png' }
+	{ name: 'Fission Product', icon: '72px-FissionProduct.png' },
+	{ name: 'Unity', icon: 'Unity_Large.png' }
 ] as const satisfies Item[];

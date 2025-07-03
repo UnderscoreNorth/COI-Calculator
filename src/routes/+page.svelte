@@ -1,112 +1,113 @@
-<script lang='ts'>
-	import { calc } from "$lib/calc";
-	import { items } from "$lib/data/items";
-	import { recipes } from "$lib/data/recipes.svelte";
-	import { getBuilding } from "$lib/helper";
-	import InOut from "./inOut.svelte";
-	import ItemComponent from "./ItemComponent.svelte";
-	import Recipes from "./recipes.svelte";
-	import { initialInOuts } from "./states.svelte";
+<script lang="ts">
+	import { autoCalc } from '$lib/autoCalc';
+	import AddRecipe from './addRecipe.svelte';
+	import AddRequirement from './addRequirement.svelte';
+	import GlobalBalance from './globalBalance.svelte';
+	import Recipes from './recipes.svelte';
+	import Settlement from './settlement.svelte';
+	import { input, output } from './states.svelte';
+	let showInit: Boolean = $state(false);
+	let loading: Boolean = $state(false);
+	let loops: number = $state(1);
+	async function calc() {
+		loading = true;
+		loops = 1;
+		let [before, after] = ['', ''];
+		do {
+			await new Promise((res, rej) => {
+				setTimeout(() => {
+					res(null);
+				}, 1);
+			});
+			before = JSON.stringify(output().itemBalance);
+			autoCalc();
+			after = JSON.stringify(output().itemBalance);
+			loops++;
+		} while (loops < 100 && before !== after);
 
-	let itemList:Array<{item:string,input:number,output:number,key:number}> = $state([]);
-    let buildingList:Array<{building:string,recipe:string,num:number}> = $state([]);
-    let showRecipes:Boolean = $state(false);
-    let showInit:Boolean = $state(false);
-    $effect(()=>{
-        let result = calc(recipes,initialInOuts)
-        itemList = result.itemList
-        buildingList = result.buildingList
-    }) 
+		loading = false;
+	}
 </script>
-{#if showRecipes}
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class='bg' onclick={()=>showRecipes=false}>
-    <Recipes /> 
-</div>
-{/if}
+
 {#if showInit}
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class='bg' onclick={()=>showInit=false}>
-    <InOut/> 
-</div>
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="bg" onclick={() => (showInit = false)}><AddRequirement /></div>
 {/if}
-<div id='container'>
-    <div>
-        <a href='https://www.captain-of-industry.com/' target="_blank">Captain of Industry</a>
-        <a href='https://github.com/UnderscoreNorth/COI-Calculator' target="_blank">Github</a>
-    </div>
+{#if loading}
+	<div class="bg">
+		<div
+			style:font-size={'5rem'}
+			style:margin={'auto'}
+			style:width={'25rem'}
+			style:margin-top={'15%'}
+			style:font-weight={'bold'}
+			style:text-align={'center'}
+		>
+			Loading, Loop: {loops}
+		</div>
+	</div>
+{/if}
+{#if input.selectedItem !== ''}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="bg" onclick={() => (input.selectedItem = '')}><AddRecipe /></div>
+{/if}
 <div>
-    <button onclick={()=>{showInit = true}}>Show Init</button>
-    <button onclick={()=>{showRecipes = true}}>Toggle Recipes</button>
+	<a href="https://www.captain-of-industry.com/" target="_blank">Captain of Industry</a>
+	<a href="https://github.com/UnderscoreNorth/COI-Calculator" target="_blank">Github</a>
+	<button
+		onclick={() => {
+			showInit = true;
+		}}>Add Requirements</button
+	>
+	<button onclick={() => calc()}> Auto calc </button>
 </div>
-<div class='inline-block'><ItemComponent {itemList} key={4}/></div>
-<div class='inline-block'><ItemComponent {itemList} key={3}/></div>
-<div class='inline-block'><ItemComponent {itemList} key={2}/></div>
-<div class='inline-block'><ItemComponent {itemList} key={1}/></div>
-<div class='inline-block'>
-<table>
-    <thead>
-        <tr><th colspan=2>Building</th><th>Recipe</th><th>Num</th><th>Pop</th><th>KW</th><th>TFlops</th></tr>
-    </thead>
-    <tbody>
-{#each buildingList as {building,recipe,num}}
-    <tr>
-        <td><img alt={building} src={'icons/' + getBuilding(building).icon} /></td>
-        <td>{building}</td>
-        <td><img alt={recipe} src={'icons/' + items.filter(i=>i.name==recipe)[0].icon} /></td>
-        <td>{Math.ceil(num)}</td>
-        <td>{getBuilding(building).pop * Math.ceil(num)}</td>
-        <td>{Math.round(getBuilding(building).kw * num * 10)/10}</td>
-        <td>{Math.round(getBuilding(building).tflop * num * 10)/10}</td>
-    </tr>
-{/each}
-</tbody>
-</table>
+<div id="container">
+	<div><Settlement /></div>
+	<div><GlobalBalance /></div>
+	<div><Recipes /></div>
 </div>
-</div>
+
 <style>
-    td,th{
-        padding:0 0.5rem;
-    }
-   
-    :global(body,html){
-        background:#2f3536;
-        margin:0;
-        font-family:'Helvetica';
-        color:rgb(212, 212, 212);
-        font-size:16px;
-    }
-    :global(img){
-        height:16px;
-    }
-     .bg{
-        background:rgba(0,0,0,0.5);
-        height:100vh;
-        width: 100vw;
-        top:0;
-        z-index: 1;
-        position:absolute;
-    }
-    .inline-block{
-        overflow-y: auto;
-        max-height: calc(100vh - 5rem);
-    }
-    #container{
-        display:flex;
-        max-height: calc(100vh - 3rem);
-        flex-direction: column;
-        flex-wrap: wrap;
-        gap:1rem;
-        padding:1rem;
-        width:min-content;
-    }
-    button{
-        width:15rem;
-        padding:0.5rem;
-    }
-    a{
-        color:rgb(197, 182, 95)
-    }
+	:global(body, html) {
+		background: #2f3536;
+		margin: 0;
+		font-family: 'Helvetica';
+		color: rgb(212, 212, 212);
+		font-size: 12px;
+	}
+	:global(img) {
+		height: 12px;
+	}
+	.bg {
+		background: rgba(0, 0, 0, 0.5);
+		height: 100vh;
+		width: 100vw;
+		top: 0;
+		z-index: 1;
+		position: absolute;
+	}
+	#container {
+		display: flex;
+		max-height: calc(100vh - 5rem);
+		flex-direction: column;
+		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 1rem;
+		width: min-content;
+	}
+	#container > div {
+		height: calc(100vh - 5rem);
+		overflow-y: auto;
+		padding-right: 1rem;
+	}
+	button {
+		width: 10rem;
+		padding: 0.5rem;
+		white-space: nowrap;
+	}
+	a {
+		color: rgb(197, 182, 95);
+	}
 </style>

@@ -32,6 +32,7 @@ export type ItemName = (typeof items)[number]['name'];
 export type BuildingName = (typeof buildings)[number]['name'];
 export type VehicleName = (typeof vehicles)[number]['name'];
 export type Recipe = {
+	num?: number;
 	building: BuildingName;
 	kwRatio?: number;
 	input: Partial<Record<ItemName, number>>;

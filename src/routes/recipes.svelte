@@ -1,90 +1,73 @@
-<script lang='ts'>
-	import { items } from "$lib/data/items";
-    import { recipes } from "$lib/data/recipes.svelte";
-	import { getBuilding } from "$lib/helper";
-    let search = $state('')
+<script lang="ts">
+	import { items } from '$lib/data/items';
+	import { recipes } from '$lib/data/recipes.svelte';
+	import { getBuilding, round } from '$lib/helper';
 </script>
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div id='modal' onclick={(e)=>e.stopPropagation()}>
-        <input bind:value={search} placeholder="Search" />
-        <div id='tableScroller'>
-        <table id='recipes'>
-            <thead>
-                <tr>
-                    <th>Building</th>
-                    <th>Inputs</th>
-                    <th>Outputs</th>
-                    <th>Active</th>
-                </tr>
-            </thead>
-            <tbody>
-            {#each recipes.filter(i=>
-                Object.keys(i.input).some(j=>j.toLowerCase().includes(search.toLowerCase())) 
-                || Object.keys(i.output).some(j=>j.toLowerCase().includes(search.toLowerCase())) 
-                || search == ''
-            ) as recipe}
-                <tr class='recipe'>
-                    <td><img alt={recipe.building} src={'icons/' + getBuilding(recipe.building).icon} />{recipe.building}</td>
-                    <td>
-                        <table>
-                            <tbody>
-                        {#each Object.entries(recipe.input) as [item,num]}
-                        <tr><td>{num}</td><td><img alt={item} src={'icons/' + items.filter(i=>i.name==item)[0].icon} />
-                            {item}</td></tr>
-                        {/each}
-                            </tbody>
-                        </table>
-                    </td>
-                    <td>
-                        <table>
-                            <tbody>
-                        {#each Object.entries(recipe.output) as [item,num]}
-                        <tr><td>{num}</td><td><img alt={item} src={'icons/' + items.filter(i=>i.name==item)[0].icon} />
-                            {item}</td></tr>
-                        {/each}
-                            </tbody>
-                        </table>
-                    </td>
-                    <td>
-                        <input type='checkbox' bind:checked={recipe.active}>
-                    </td>
-                </tr>
-            {/each}
-            </tbody>
-        </table>
-        </div>
-    </div>
+
+<table id="recipes">
+	<thead>
+		<tr>
+			<th>Building</th>
+			<th>Inputs</th>
+			<th>Outputs</th>
+			<th>Num</th>
+		</tr>
+	</thead>
+	<tbody>
+		{#each recipes.filter((i) => i?.num ?? 0 > 0) as recipe}
+			<tr class="recipe">
+				<td class="item">
+					<img
+						alt={recipe.building}
+						src={'icons/' + getBuilding(recipe.building).icon}
+					/>{recipe.building}
+				</td>
+				<td>
+					<table>
+						<tbody>
+							{#each Object.entries(recipe.input) as [item, num]}
+								<tr>
+									<td>{round(num)}</td>
+									<td class="item">
+										<img alt={item} src={'icons/' + items.filter((i) => i.name == item)[0].icon} />
+										{item}
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tbody>
+							{#each Object.entries(recipe.output) as [item, num]}
+								<tr>
+									<td>{round(num)}</td>
+									<td class="item">
+										<img alt={item} src={'icons/' + items.filter((i) => i.name == item)[0].icon} />
+										{item}
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</td>
+				<td>
+					<input type="number" bind:value={recipe.num} />
+				</td>
+			</tr>
+		{/each}
+	</tbody>
+</table>
 
 <style>
-    #modal{
-        height:70vh;
-        width:70vw;
-        margin: auto;
-        margin-top:calc(15vh - 1rem);
-        background:#2f3536;
-        color:white;
-        font-family: 'Helvetica';
-        padding:1rem;
-        display:grid;
-        grid-template-rows: auto auto;
-        grid-template-columns: 100%;
-        gap:5px
-    }
-    .recipe>td{
-        border:solid 1px white;
-        
-    }
-    #recipes{
-        width:calc(100% - 5px)
-    }
-    input{
-        width:100%;
-        font-size:24px;
-    }
-    input[type=checkbox]{height:24px}
-    #tableScroller{
-        overflow-y: scroll;
-        height:100%;
-    }
+	#recipes {
+		width: calc(100% - 5px);
+	}
+	input {
+		width: 5rem;
+	}
+	.item {
+		white-space: nowrap;
+	}
 </style>
